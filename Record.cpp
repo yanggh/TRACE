@@ -13,9 +13,11 @@
 using namespace std;
 
 static string  dir_name = "testing/";
-static string  pre_fix =  "asdf";
-static string  Format =   "%Y%m%d%H%M%S";
-static string  pFormat =  pre_fix + Format;
+static string  pre_xq_fix =  "小区告警信息_";
+static string  pre_igsmr_fix =  "Igsmr信息_";
+static string  pFormat =  "%Y%m%d%H%M%S";
+static string  Format =   pFormat + "_";
+static string  Parse =    "%*[^_]_%[^_]%*s";
 
 static string filename(const int diff = 0)
 {
@@ -26,8 +28,21 @@ static string filename(const int diff = 0)
 	char strTime[100];
 	strftime(strTime, sizeof(strTime), Format.c_str(), tmTime);
 
-	string filename = pre_fix + string(strTime);
-	return filename;
+	string file(strTime);
+	return file;
+}
+
+static string Add_Over_Time(const string &pre_fix, const string &filename, const int &Port, const string &suf_fix)
+{
+	time_t  tt = time(NULL);
+	struct tm  *tmTime = localtime(&tt);
+
+	char strTime[100];
+	strftime(strTime, sizeof(strTime), Format.c_str(), tmTime);
+
+	string file = pre_fix + filename + string(strTime) + to_string(Port) + suf_fix;
+
+	return file;
 }
 
 static string Get_all_path(const string filename)
@@ -56,30 +71,34 @@ static bool CComp(const string &file1,  const string &file2)
 	time_t  tt_1;
 	time_t  tt_2;
 
-	strptime(file1.c_str(), pFormat.c_str(), &tm_f);
+	char  start1[256];
+	char  start2[256];
+
+	bzero(start1, 256);
+	bzero(start2, 256);
+
+	sscanf(file1.c_str(), Parse.c_str(), start1);
+	sscanf(file2.c_str(), Parse.c_str(), start2);
+
+	strptime(start1, pFormat.c_str(), &tm_f);
 	tt_1 = mktime(&tm_f);
 
-	strptime(file2.c_str(), pFormat.c_str(), &tm_f);
+	strptime(start2, pFormat.c_str(), &tm_f);
 	tt_2 = mktime(&tm_f);
 
 	return tt_1 > tt_2; 
 }
 
-string XXX::Open()
+void  XXX::Open()
 {
-	std::string file = filename();
+	newfile = filename();
 
-	string path  = Get_all_path(file);
+	string path  = Get_all_path(newfile);
 	infile.open(path.c_str());
 	if(!infile.is_open())
 	{
 		exit(EXIT_FAILURE);
 	}
-
-	DelOld();
-	AddNewFile(file);
-
-	return file;
 }
 
 void XXX::Sort()
@@ -128,15 +147,38 @@ void XXX::Show()
 void  XXX::Write(const std::string  &val)
 {
 	static  time_t  sign = time(NULL);
-
 	if (limit * 1024 * 1024 <= infile.tellp())
 	{
+		string  outfile;
+		string  src_path;
+		string  dst_path;
+
 		infile.close();
+		outfile = Add_Over_Time(pre_xq_fix, newfile, 1, ".tre");
+		src_path = Get_all_path(newfile);
+		dst_path = Get_all_path(outfile);
+
+		DelOld();
+		AddNewFile(outfile);
+
+		rename(src_path.c_str(), dst_path.c_str());
 		Open();
 	}
 	else  if(timeout > 0 && timeout <= time(NULL) - sign)
 	{
+		string  outfile;
+		string  src_path;
+		string  dst_path;
+
 		infile.close();
+		outfile = Add_Over_Time(pre_xq_fix, newfile, 1, ".tre");
+		src_path = Get_all_path(newfile);
+		dst_path = Get_all_path(outfile);
+
+		DelOld();
+		AddNewFile(outfile);
+
+		rename(src_path.c_str(), dst_path.c_str());
 		Open();
 		sign = time(NULL);
 	}
@@ -170,7 +212,10 @@ void XXX::GetFileVec()
 			strcmp( filename->d_name , "..") == 0    )
 			continue;
 
-		if(strstr(filename->d_name, pre_fix.c_str()) == NULL)
+		if(strstr(filename->d_name, pre_xq_fix.c_str()) == NULL)
+			continue;
+
+		if(strstr(filename->d_name, pre_igsmr_fix.c_str()) == NULL)
 			continue;
 
 		FileList.push_back(filename->d_name);
@@ -183,7 +228,7 @@ void XXX::DelOld()
 
 	while(!FileList.empty())
 	{
-		if(!CComp(FileList.back(), file))
+		if(!CComp(FileList.back(), pre_xq_fix + file))
 		{
 			Del(FileList.back());
 			FileList.pop_back();

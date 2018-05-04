@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstring>
 #include <vector>
+#include <chrono>
 #include "Glue.h"
 using namespace std;
 
@@ -26,32 +27,29 @@ string IGSM_PIN::get_igsm_pin_head(const int len, const int atp, const bool mt, 
 	cout << "get_igsm_pin_head" << endl;
 	vector<uint8_t> sm;
 
-	sm.resize(22);
+	uint8_t mt_ = 1;
+	uint8_t mt_s_ = 1;
+	uint8_t type_ = (dtype == PIN ? 0 : 1);
 
-	uint32_t  frame = 0xffffffff;
-	memcpy(sm.data(), &frame, 4);
+	auto now = chrono::system_clock::now();
+	time_t time_now = chrono::system_clock::to_time_t(now);
+	int    time_sec = time_now / 1000;
+	short  time_min = time_now % 1000;
+	short  time_tz = 8;
+	short  time_flag = 1;
+	int    data_len = (dtype == PIN ? 18 : 17+len);
 
-	uint16_t fra_len = 16+len;
-	memcpy(sm.data()+4, &fra_len, 2);
+	sm.resize(17);
 
-	time_t utc = time(NULL);
-	memcpy(sm.data()+6, &utc, 8);
+	sm[0] = mt_;
+	sm[1] = mt_s_;
+	sm[2] = type_;
 
-	uint32_t apt_mt = (atp & 0xffffff) | (mt & 0xff00000000);
-	memcpy(sm.data()+14, &apt_mt, 4); 
-
-	sm[18] = port;
-	if(dtype == PIN)
-	{
-		sm[19] = 0;
-	}
-	else if(dtype == UP_SM || dtype == DOWN_SM)
-	{
-		sm[19] = 1;
-	}
-
-	uint16_t dlen = 16 + len;
-	memcpy(sm.data()+20, &dlen, 2);
+	memcpy(sm.data()+3, &time_sec, 4);
+	memcpy(sm.data()+7, &time_min, 2);
+	memcpy(sm.data()+9, &time_tz, 2);
+	memcpy(sm.data()+11, &time_flag, 2);
+	memcpy(sm.data()+13, &data_len, 4);
 
 	string res;
 	res.insert(res.end(), sm.begin(), sm.end());
@@ -69,41 +67,27 @@ string WARN_STAT::get_warn_stat_head(const int len, const int atp, const bool mt
 {
 	vector<uint8_t> sm;
 
-	sm.resize(22);
+	sm.resize(16);
 
-	uint32_t  frame;
-	if(dtype == STAT)
-	{
-		frame = 0xeeeeeeee;
-	}
-	else if(dtype == WARING)
-	{
-		frame = 0xdddddddd;
-	}
-	memcpy(sm.data(), &frame, 4);
+	uint8_t mt_ = 1;
+	uint8_t type_ = (dtype == WARING ? 0 : 1);
 
-	uint16_t fra_len = 16 + len;
-	memcpy(sm.data()+4, &fra_len, 2);
+	auto now = chrono::system_clock::now();
+	time_t time_now = chrono::system_clock::to_time_t(now);
+	int    time_sec = time_now / 1000;
+	short  time_min = time_now % 1000;
+	short  time_tz = 8;
+	short  time_flag = 1;
+	int    data_len = 17+len;
 
-	time_t utc = time(NULL);
-	memcpy(sm.data()+6, &utc, 8);
+	sm[0] = mt_;
+	sm[1] = type_;
 
-	uint32_t apt_mt = (atp & 0xffffff) | (mt & 0xff00000000);
-	memcpy(sm.data()+14, &apt_mt, 4); 
-
-	uint16_t spare;
-	if(dtype == STAT)
-	{ 
-		spare = 0xeeee;
-	}
-	else if(dtype == WARING)
-	{
-		spare = 0xdddd;
-	}
-	memcpy(sm.data()+18, &spare, 2);
-
-	uint16_t dlen = 16 + len;
-	memcpy(sm.data()+20, &dlen, 2);
+	memcpy(sm.data()+2, &time_sec, 4);
+	memcpy(sm.data()+6, &time_min, 2);
+	memcpy(sm.data()+8, &time_tz, 2);
+	memcpy(sm.data()+10, &time_flag, 2);
+	memcpy(sm.data()+12, &data_len, 4);
 
 	string res;
 	res.insert(res.end(), sm.begin(), sm.end());
@@ -111,12 +95,31 @@ string WARN_STAT::get_warn_stat_head(const int len, const int atp, const bool mt
 	return move(res);
 }
 
-string get_dst(const Data data)
+string get_dst(Data data)
 {
 	string dst;
 	if(data.type == UP_SM || data.type == DOWN_SM || data.type == PIN)
 	{
 		class  IGSM_PIN  igsm_pin;
+		if(data.type == PIN)
+		{
+			uint8_t type = data.data[0];
+			uint8_t sig = data.data[1];
+			data.data.resize(1);
+
+			if(type == CTS)
+			{
+				data.data[0] = (sig == VOL_L ? CTS_L : CTS_H);
+			}
+			else if(type == DSR)
+			{
+				data.data[0] = (sig == VOL_L ? DSR_L : DSR_H);
+			}
+			else if(type == DCD)
+			{
+				data.data[0] = (sig == VOL_L ? DCD_L : DCD_H);
+			}
+		}
 		dst = igsm_pin.get_all_msg(data.data);
 	}
 	else

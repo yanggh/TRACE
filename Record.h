@@ -12,10 +12,11 @@ private:
 	long     limit;
 	int      diff;
 	time_t   timeout;
+	string   newfile;
 	ofstream infile;
 	std::vector<std::string>  FileList;
 
-	std::string Open();
+	void Open();
 	void GetFileVec();
 	void Sort();
 	void DelOld();

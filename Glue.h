@@ -58,5 +58,5 @@ public:
 
 };
 
-string get_dst(const Data data);
+string get_dst(Data data);
 #endif

@@ -1,0 +1,126 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+AddNewFile	Record.cpp	/^void XXX::AddNewFile(const std::string &filename)$/;"	f	class:XXX
+BASE	Glue.h	/^class   BASE$/;"	c
+CComp	Record.cpp	/^static bool CComp(const string &file1,  const string &file2)$/;"	f	file:
+CXX	Makefile	/^CXX = g++$/;"	m
+CXXFLAGS	Makefile	/^CXXFLAGS = -Wall -g -std=c++11 -static$/;"	m
+Cfsetispeed	wraptermios.cpp	/^void Cfsetispeed(struct termios *termptr, speed_t speed)$/;"	f
+Cfsetospeed	wraptermios.cpp	/^void Cfsetospeed(struct termios *termptr, speed_t speed)$/;"	f
+DOWN_SM	Common.h	/^    DOWN_SM = 0x81,$/;"	e	enum:TS_TYPE
+Data	Common.h	/^struct Data {$/;"	s
+Del	Record.cpp	/^static void Del(const std::string &filename)$/;"	f	file:
+DelOld	Record.cpp	/^void XXX::DelOld()$/;"	f	class:XXX
+FileList	Record.h	/^	std::vector<std::string>  FileList;$/;"	m	class:XXX
+Format	Record.cpp	/^static string  Format =   "%Y%m%d%H%M%S";$/;"	v	file:
+GetFileVec	Record.cpp	/^void XXX::GetFileVec()$/;"	f	class:XXX
+Get_all_path	Record.cpp	/^static string Get_all_path(const string filename)$/;"	f	file:
+IGSM_PIN	Glue.h	/^	IGSM_PIN():len(0), atp(0), mt(0), dtype(UP_SM)$/;"	f	class:IGSM_PIN
+IGSM_PIN	Glue.h	/^	IGSM_PIN(const int len1, const int atp1, const bool mt1, const int port1, const TS_TYPE dtype1):len(len1),atp(atp1),mt(mt1),port(port1),dtype(dtype1)$/;"	f	class:IGSM_PIN
+IGSM_PIN	Glue.h	/^class  IGSM_PIN: public BASE$/;"	c
+INCLUDES	Makefile	/^INCLUDES = $/;"	m
+LDFLAGS	Makefile	/^LDFLAGS =$/;"	m
+LDPATH	Makefile	/^LDPATH = $/;"	m
+LOOPBACK	mxc_uart_test.c	23;"	d	file:
+OBJS	Makefile	/^OBJS = Pack.o Reader.o  Record.o  wraptermios.o error.o  Glue.o $/;"	m
+Open	Record.cpp	/^string XXX::Open()$/;"	f	class:XXX
+PIN	Common.h	/^    PIN = 0x84$/;"	e	enum:TS_TYPE
+PROGS	Makefile	/^PROGS = Demo  Reader_test Record_test Glue_test$/;"	m
+Pack	Pack.h	/^class Pack$/;"	c
+RM	Makefile	/^RM = rm -f$/;"	m
+Reader	Reader.cpp	/^Reader::Reader(string  dev)$/;"	f	class:Reader
+Reader	Reader.h	/^class  Reader$/;"	c
+Readn	Common.cpp	/^ssize_t Readn(int fd, void *vptr, size_t n)$/;"	f
+Readn	Reader.cpp	/^ssize_t Readn(int fd, void *vptr, size_t n)$/;"	f
+STAT	Common.h	/^    STAT = 0x83,$/;"	e	enum:TS_TYPE
+Show	Record.cpp	/^void XXX::Show()$/;"	f	class:XXX
+Sort	Record.cpp	/^void XXX::Sort()$/;"	f	class:XXX
+SystemError	error.cpp	/^SystemError::SystemError(const std::string &what_arg, int error_code):$/;"	f	class:SystemError
+SystemError	error.h	/^class SystemError: public std::runtime_error {$/;"	c
+TS_TYPE	Common.h	/^enum  TS_TYPE$/;"	g
+Tcflush	wraptermios.cpp	/^void Tcflush(int fd, int queue)$/;"	f
+Tcgetattr	wraptermios.cpp	/^void Tcgetattr(int fd, struct termios *termptr)$/;"	f
+Tcsetattr	wraptermios.cpp	/^void Tcsetattr(int fd, int opt, const struct termios *termptr)$/;"	f
+Tty_open	wraptermios.cpp	/^int Tty_open(const char *dev, int oflag)$/;"	f
+Tty_open_easy	wraptermios.cpp	/^int Tty_open_easy(const char *dev)$/;"	f
+Tty_raw	wraptermios.cpp	/^void Tty_raw(int fd)$/;"	f
+Tty_set_icanon	wraptermios.cpp	/^void Tty_set_icanon(int fd, int echo, int icanon)$/;"	f
+Tty_set_parity	wraptermios.cpp	/^void Tty_set_parity(int fd, int databits, int stopbits, int parity)$/;"	f
+Tty_set_speed	wraptermios.cpp	/^void Tty_set_speed(int fd, int speed)$/;"	f
+Tty_set_timeout	wraptermios.cpp	/^void Tty_set_timeout(int fd, int min, int sec, int millisec)$/;"	f
+UP_SM	Common.h	/^    UP_SM = 0x80,$/;"	e	enum:TS_TYPE
+WARING	Common.h	/^    WARING = 0x82,$/;"	e	enum:TS_TYPE
+WARN_STAT	Glue.h	/^	WARN_STAT():len(0), atp(0), mt(0), dtype(STAT)$/;"	f	class:WARN_STAT
+WARN_STAT	Glue.h	/^	WARN_STAT(const int len1, const int atp1, const bool mt1, const TS_TYPE dtype1):len(len1),atp(atp1),mt(mt1), dtype(dtype1)$/;"	f	class:WARN_STAT
+WARN_STAT	Glue.h	/^class  WARN_STAT: public BASE$/;"	c
+Write	Record.cpp	/^void  XXX::Write(const std::string  &val)$/;"	f	class:XXX
+XXX	Record.cpp	/^XXX::XXX(const long limit, const int diff, const time_t  timeout):limit(limit), diff(diff), timeout(timeout)$/;"	f	class:XXX
+XXX	Record.h	/^class  XXX$/;"	c
+_SERIAL_H_	bz_ctl_test.h	2;"	d
+__COMMON_H_	Common.h	2;"	d
+__GLUE_H_	Glue.h	2;"	d
+__PACK_H_	Pack.h	2;"	d
+__READER_H_	Reader.h	2;"	d
+__RECORD__H	Record.h	2;"	d
+__unp_error_h	error.h	2;"	d
+__wraptermios_h	wraptermios.h	2;"	d
+atp	Glue.h	/^	int atp;$/;"	m	class:IGSM_PIN
+atp	Glue.h	/^	int atp;$/;"	m	class:WARN_STAT
+code	error.cpp	/^int SystemError::code() const$/;"	f	class:SystemError
+data	Common.h	/^	std::string data;$/;"	m	struct:Data
+dev	Reader.h	/^	std::string  dev;$/;"	m	class:Reader
+diff	Record.h	/^	int      diff;$/;"	m	class:XXX
+dir_name	Record.cpp	/^static string  dir_name = "testing\/";$/;"	v	file:
+dtype	Glue.h	/^	TS_TYPE dtype;$/;"	m	class:IGSM_PIN
+dtype	Glue.h	/^	TS_TYPE dtype;$/;"	m	class:WARN_STAT
+err_doit	error.cpp	/^err_doit(int errnoflag, const char *fmt, va_list ap)$/;"	f	file:
+err_dump	error.cpp	/^err_dump(const char *fmt, ...)$/;"	f
+err_msg	error.cpp	/^err_msg(const char *fmt, ...)$/;"	f
+err_quit	error.cpp	/^err_quit(const char *fmt, ...)$/;"	f
+err_ret	error.cpp	/^err_ret(const char *fmt, ...)$/;"	f
+err_sys	error.cpp	/^err_sys(const char *fmt, ...)$/;"	f
+error_code_	error.h	/^    int error_code_;$/;"	m	class:SystemError
+fd	Reader.h	/^	int fd;$/;"	m	class:Reader
+filename	Record.cpp	/^static string filename(const int diff = 0)$/;"	f	file:
+flag	Common.h	/^	bool  flag = false;$/;"	m	struct:Data
+get_all_msg	Glue.cpp	/^string BASE::get_all_msg(string  src)$/;"	f	class:BASE
+get_data	Reader.cpp	/^Data Reader::get_data()$/;"	f	class:Reader
+get_dst	Glue.cpp	/^string get_dst(const Data data)$/;"	f
+get_igsm_pin_head	Glue.cpp	/^string IGSM_PIN::get_igsm_pin_head(const int len, const int atp, const bool mt, const int port, const TS_TYPE dtype)$/;"	f	class:IGSM_PIN
+get_msg_head	Glue.cpp	/^string IGSM_PIN::get_msg_head()$/;"	f	class:IGSM_PIN
+get_msg_head	Glue.cpp	/^string WARN_STAT::get_msg_head()$/;"	f	class:WARN_STAT
+get_warn_stat_head	Glue.cpp	/^string WARN_STAT::get_warn_stat_head(const int len, const int atp, const bool mt, const TS_TYPE dtype)$/;"	f	class:WARN_STAT
+impl	Pack.cpp	/^string Pack::impl(const Data &data)$/;"	f	class:Pack
+infile	Record.h	/^	ofstream infile;$/;"	m	class:XXX
+len	Glue.h	/^	int len;$/;"	m	class:IGSM_PIN
+len	Glue.h	/^	int len;$/;"	m	class:WARN_STAT
+limit	Record.h	/^	long     limit;$/;"	m	class:XXX
+main	Glue_test.cpp	/^int main()$/;"	f
+main	Main.cpp	/^int main(int argc, char** argv)$/;"	f
+main	Pack_test.cpp	/^int main(int argc, char** argv)$/;"	f
+main	Reader_test.cpp	/^int main(int argc, char** argv)$/;"	f
+main	Record_test.cpp	/^int main()$/;"	f
+main	main.cpp	/^int main(int argc, char** argv)$/;"	f
+main	mxc_uart_test.c	/^int main(int argc, char **argv)$/;"	f
+msg_stack	Pack.h	/^	std::stack<Data>  msg_stack;$/;"	m	class:Pack
+mt	Glue.h	/^	int mt;$/;"	m	class:IGSM_PIN
+mt	Glue.h	/^	int mt;$/;"	m	class:WARN_STAT
+name_arr	wraptermios.cpp	/^static int name_arr[] = {  230400, 57600,  38400,  19200,  9600,  4800,  2400,  1800,  1200,  600, $/;"	m	namespace:__anon1	file:
+open_port	bz_ctl_test.c	/^int open_port(int fd,int comport)$/;"	f
+pFormat	Record.cpp	/^static string  pFormat =  pre_fix + Format;$/;"	v	file:
+pop_stack	Pack.cpp	/^string Pack::pop_stack(const Data &data)$/;"	f	class:Pack
+port	Glue.h	/^	int port;$/;"	m	class:IGSM_PIN
+pre_fix	Record.cpp	/^static string  pre_fix =  "asdf";$/;"	v	file:
+pth_all_hd	main.cpp	/^void pth_all_hd(int  fd)$/;"	f
+pth_bz_hd	main.cpp	/^void pth_bz_hd(int fd)$/;"	f
+push_stack	Pack.cpp	/^void  Pack::push_stack(const Data &data)$/;"	f	class:Pack
+set_opt	bz_ctl_test.c	/^int set_opt(int fd,int nSpeed, int nBits, char nEvent, int nStop)$/;"	f
+speed_arr	wraptermios.cpp	/^static int speed_arr[] = { B230400, B57600, B38400, B19200, B9600, B4800, B2400, B1800, B1200, B600,   $/;"	m	namespace:__anon1	file:
+timeout	Record.h	/^	time_t   timeout;$/;"	m	class:XXX
+tty_raw	wraptermios.cpp	/^tty_raw(int fd)		\/* put terminal into a raw mode *\/$/;"	f
+type	Common.h	/^	int   type = 0;$/;"	m	struct:Data
+~Reader	Reader.cpp	/^Reader::~Reader()$/;"	f	class:Reader

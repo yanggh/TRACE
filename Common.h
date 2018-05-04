@@ -11,6 +11,26 @@ enum  TS_TYPE
     PIN = 0x84
 };
 
+enum PIN_TYPE
+{
+    CTS = 0,
+    DSR = 1,
+    DCD = 2
+};
+
+enum VOL_TYPE
+{
+    VOL_H = 1,
+    VOL_L = 0,
+    CTS_H = 0,
+    CTS_L = 1,
+    DSR_H = 0x18,
+    DSR_L = 0x19,
+    DCD_H = 0x08,
+    DCD_L = 0x09
+};
+
+
 struct Data {
 	int   type = 0;
 	bool  flag = false;

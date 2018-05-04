@@ -3,6 +3,7 @@
 #include "Glue.h"
 #include "Record.h"
 using namespace std;
+
 int main(int argc, char** argv)
 {
 	Reader reader(argv[1]);

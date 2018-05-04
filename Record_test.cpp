@@ -3,7 +3,7 @@
 
 int main()
 {
-	XXX  xxx(100, 10, 60);
+	XXX  xxx(100, 1, 2);
 	xxx.Write("nihao");
 	std::cout << "----------------------" << std::endl;
 	xxx.Show();
