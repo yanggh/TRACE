@@ -6,7 +6,7 @@ LDFLAGS =
 LDPATH = -L/usr/local/arm/gcc-linaro-arm-linux-gnueabihf-4.8-2014.04_linux/bin \
 	 -L/usr/local/arm/gcc-linaro-arm-linux-gnueabihf-4.8-2014.04_linux/lib/gcc/arm-linux-gnueabihf/4.8.3 \
 
-OBJS = Pack.o Reader.o  Record.o  wraptermios.o error.o  Glue.o 
+OBJS = Pack.o Reader.o  Record.o  wraptermios.o error.o  Glue.o Daemon_init.o
 PROGS = Demo  Reader_test Record_test Glue_test
 
 .PHONY: all

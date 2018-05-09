@@ -2,10 +2,12 @@
 #include "Pack.h"
 #include "Glue.h"
 #include "Record.h"
+#include "Daemon_init.h"
 using namespace std;
 
 int main(int argc, char** argv)
 {
+	Daemon_init();
 	Reader reader(argv[1]);
 	XXX xxx(100, 120, 10);
 
