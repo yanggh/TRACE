@@ -1,4 +1,4 @@
-#include "Daemon_init.h"
+#include "Daemon.h"
 #include "error.h"
 //#include "wrapsignal.h"
 #include <unistd.h>
@@ -9,7 +9,7 @@
 #define	MAXFD	64
 
 int
-Daemon_init()
+Daemon()
 {
 	int		i;
 	pid_t	pid;
