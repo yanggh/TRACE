@@ -8,7 +8,7 @@
 using namespace std;
 
 static const string  pre_igsmr_fix =  "Igsmr_";
-static const string  pre_igsmr_sub =  ".tra";
+istatic const string  pre_igsmr_sub =  ".tra";
 static const string  pre_xq_fix =  "Information_";
 static const string  pre_xq_sub =  ".trb";
 static const string  pre_full_fix = "FullTrace_";
