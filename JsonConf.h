@@ -3,6 +3,7 @@
 #include "rapidjson/document.h"
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
+#include "singleton.h"
 #include <string>
 #include <iostream>
 
@@ -10,11 +11,27 @@ class JsonConf
 {
 private:
     std::string file;
-    rapidjson::Document data;
+    rapidjson::Document doc;
+
+    friend  class Singleton<JsonConf>;
+
+    JsonConf():file("/usr/local/trace/conf/trace.json"){  }
+    JsonConf(const std::string file):file(file) {  }
+
     int init();
 public:
-    JsonConf():file("demo.txt"){ init(); }
-    JsonConf(const std::string file):file(file) { init(); }
-    std::string get_value();
+    std::string getLogDir();
+    std::string getSerial1();
+    std::string getSerial2();
+    std::string getFilePrefix();
+
+    int getFileSliceSize();
+    int getDiff();
+    int getTimeout();
+    int getDaemonMode();
+    void print(std::ostream &out);
+
+    static void initialize(int argc, char **argv);
+    static JsonConf &getInstance();
 };
 #endif

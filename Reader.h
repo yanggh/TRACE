@@ -10,9 +10,9 @@ class  Reader
 {
 private:
 	int fd;
-	std::string  dev;
+	int num;
 public:
-	Reader(std::string dev);
+	Reader(const std::string dev);
 	~Reader();
 	Data get_data();
 };

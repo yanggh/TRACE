@@ -32,8 +32,7 @@ enum VOL_TYPE
 
 
 struct Data {
-	int   type = 0;
-	bool  flag = false;
+	uint8_t type;
 	std::string data;
 };
 #endif

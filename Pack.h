@@ -9,9 +9,9 @@ private:
 	std::stack<Data>  msg_stack;
 
 	void  push_stack(const Data &data);
-	std::string pop_stack(const Data &data);
 
 public:
+	std::string pop_stack(const Data &data);
 	std::string impl(const Data &data);
 };
 #endif

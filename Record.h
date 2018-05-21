@@ -4,15 +4,15 @@
 #include <string>
 #include <algorithm>
 #include <fstream>
-
 using namespace std;
-class  XXX
+class  Record
 {
 private:
-	long     limit;
-	int      diff;
-	time_t   timeout;
 	string   newfile;
+
+	string   pre_fix;
+	string   sub_fix;
+	int      Port; 
 	ofstream infile;
 	std::vector<std::string>  FileList;
 
@@ -22,8 +22,9 @@ private:
 	void DelOld();
 	void AddNewFile(const std::string &filename);
 public:
-	XXX(const long limit, const int diff, const time_t timeout);
-
+	Record(const string pre_fix, const string sub_fix, const int port);
+	~Record(){}
+	void SIGHANDLE();
 	void Show();
 	void Write(const std::string  &val);
 };

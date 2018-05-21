@@ -1,5 +1,7 @@
 #include "Pack.h"
+#include <string>
 
+using namespace std;
 void  Pack::push_stack(const Data &data)
 {
 	if(msg_stack.size() > 0)
@@ -19,28 +21,114 @@ void  Pack::push_stack(const Data &data)
 	}
 }
 
-string Pack::pop_stack(const Data &data)
+std::string Pack::pop_stack(const Data &data)
 {
-	std::cout << "------------------" << std::endl;
-	std::cout << "type = " << std::hex << msg_stack.top().type << std::endl;
-	std::cout << msg_stack.top().data << std::endl;
+	string output("invalid");
 
-	string dst = get_dst(msg_stack.top());
-	
-	msg_stack.pop();
+	string spli1; 
+	spli1.resize(2);
+	spli1[0]=0x0d;
+	spli1[1]=0x0a;
 
-	return move(dst);
+	string spli2; 
+	spli2.resize(1);
+	spli2[0]=0x7e;
+
+	string dst = msg_stack.top().data;
+	string::size_type pos1 = dst.find(spli1);
+	if(string::npos != pos1)
+	{
+		if(pos1 == 0)
+		{
+			msg_stack.top().data.erase(0, 2);
+		}
+		else
+		{
+			output = dst.substr(0, pos1+2);
+			msg_stack.top().data.erase(0, pos1+2);
+		}
+	}
+	else
+	{
+	    pos1 = dst.find(spli2);
+            if(string::npos != pos1)
+	    {
+	    	string::size_type pos2 = dst.find(spli2, pos1+1);
+
+		if(string::npos != pos2)
+		{
+			if(pos2 - pos1 == 1)
+			{
+				pos1 = pos2;
+				pos2 = dst.find(spli2, pos1+1);
+				if(string::npos != pos2)
+				{
+					output = dst.substr(pos1, pos2+1);
+					msg_stack.top().data.erase(0, pos2+1);
+//					printf("baaabefore:");
+//					for(int i = 0; i < dst.size(); i++)
+//					{
+//						printf("%02x ", dst[i]);
+//					}
+//					printf("%d  %d\n", pos1, pos2);
+//
+//					output = dst.substr(pos1, pos2+1);
+//					printf("bbbaaaamid:");
+//					for(int i = 0; i < output.size(); i++)
+//					{
+//						printf("%02x ", output[i]);
+//					}
+//					printf("%d  %d\n", pos1, pos2);
+//
+//					string dst1 = msg_stack.top().data.erase(0, pos2+1);
+//					dst1 = msg_stack.top().data.erase(0, pos2+1);
+//					printf("aaaaafter1:");
+//					for(int i = 0; i < dst1.size(); i++)
+//					{
+//						printf("%02x ", dst1[i]);
+//					}
+//					printf("%d  %d\n", pos1, pos2);
+				}
+			}
+			else
+			{
+				output = dst.substr(pos1, pos2+1);
+				msg_stack.top().data.erase(0, pos2+1);
+//
+//				printf("aaaabefore:");
+//				for(int i = 0; i < dst.size(); i++)
+//				{
+//					printf("%02x ", dst[i]);
+//				}
+//				printf("%d  %d\n", pos1, pos2);
+//
+//				printf("aaaaaaamid:");
+//				for(int i = 0; i < output.size(); i++)
+//				{
+//					printf("%02x ", output[i]);
+//				}
+//				printf("%d  %d\n", pos1, pos2);
+//
+//				string dst1 = msg_stack.top().data.erase(0, pos2+1);
+//				printf("aaaaafter1:");
+//				for(int i = 0; i < dst1.size(); i++)
+//				{
+//					printf("%02x ", dst1[i]);
+//				}
+//				printf("%d  %d\n", pos1, pos2);
+			}
+		}
+	    }
+	}
+
+	return  output;
 }
 
 string Pack::impl(const Data &data)
 {
-	string dst = "invalid";
 	push_stack(data);
-	if(data.flag == 1)
-	{
-	    dst = pop_stack(data);
-	}
+	string dst = pop_stack(data);
 
-	return move(dst);
+	return dst;
 }
 

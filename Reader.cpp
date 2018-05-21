@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include "Reader.h"
 #include "wraptermios.h"
+#include "JsonConf.h"
+#include "Common.h"
 #include <cstring>
 using namespace std;
 
@@ -34,7 +36,7 @@ ssize_t Readn(int fd, void *vptr, size_t n)
     return(n - nleft);      /* return >= 0 */
 }
 
-Reader::Reader(string  dev)
+Reader::Reader(const string dev)
 {
     fd = Tty_open_easy(dev.c_str());
 
@@ -42,7 +44,6 @@ Reader::Reader(string  dev)
     Tty_set_speed(fd, 230400);
     Tty_set_parity(fd, 8, 1, 'N');
     Tty_set_icanon(fd, 0, 0);
-
 }
 
 Reader::~Reader()
@@ -53,8 +54,8 @@ Reader::~Reader()
 Data Reader::get_data()
 {
 	Data d;
-	int len = 0;
-	int check = 0;
+	uint8_t len = 0;
+	uint8_t check = 0;
 
 	read(fd, &d.type, 1);
 	read(fd, &len, 1);
@@ -63,22 +64,17 @@ Data Reader::get_data()
 	string &data = d.data;
 	
 	const int BUFSIZE = 1024;
-	char  buff[BUFSIZE];
-	int   nread = 0;
+	char  buff[BUFSIZE] = {0};
 
-	nread = Readn(fd, buff, len);
+	ssize_t nread = Readn(fd, buff, len);
 	if(nread == len)
 	{
-	    //cout << "buf == " << std::hex << buff << ", nread = " << nread << endl;
-	    data.assign(buff, len);
+		data.assign(buff, len);
 	}
 	else
 	{
-	    cout << "error " << endl;
+		cout << "error " << endl;
 	}
 
-	(data[len-2] == 0x0d && data[len-1] == 0x0a) ? d.flag = true : d.flag = false;
-	
-//	data[len-1] == 0x7e ? d.flag = true : d.flag = false;
 	return move(d);
 }
