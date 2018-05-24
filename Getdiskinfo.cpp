@@ -2,7 +2,7 @@
 #include <sys/statfs.h>
 #include <sys/vfs.h>
 #include <errno.h>
-#include "get_disk_info.h"
+#include "Getdiskinfo.h"
 
 #ifdef __cplusplus /* 如果采用了C++，如下代码使用C编译器 */
     extern "C" { /* 如果没有采用C++，顺序预编译 */
@@ -24,7 +24,7 @@ long get_disk_percent(const char* disk)
 
     long percent = free_size * 100/ total_size;
 
-    return percent;
+    return (100 - percent);
 }
 #ifdef __cplusplus /* 结束使用C编译器 */
     }
