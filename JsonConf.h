@@ -25,6 +25,7 @@ public:
     std::string getSerial2();
     std::string getFilePrefix();
 
+    int getUsageRate();
     int getFileSliceSize();
     int getDiff();
     int getTimeout();

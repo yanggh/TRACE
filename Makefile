@@ -1,9 +1,7 @@
 CXX = g++
-#CXX = arm-linux-gnueabihf-g++
 RM = rm -f
 CXXFLAGS = -Wall -g -std=c++11 -static
-INCLUDES = 
-INCLUDES = 
+INCLUDES = -I/usr/local/include/
 LDPATH = 
 #LDPATH = -L/usr/local/arm/gcc-linaro-arm-linux-gnueabihf-4.8-2014.04_linux/bin \
 #	 -L/usr/local/arm/gcc-linaro-arm-linux-gnueabihf-4.8-2014.04_linux/lib/gcc/arm-linux-gnueabihf/4.8.3 \
@@ -23,7 +21,8 @@ clean:
 	$(CXX) -o $@ -c $< $(CXXFLAGS) $(INCLUDES)  $(LDFLAGS) $(LDPATH) 
 
 Trace: Main.o $(OBJS)
-	$(CXX) -o $@ Main.o $(OBJS) $(CXXFLAGS) $(INCLUDES)  $(LDFLAGS) $(LDPATH)
+	$(CXX) TraceMonitorApp.cpp Glue.cpp Reader.cpp Pack.cpp  Record.cpp Getdiskinfo.cpp error.cpp JsonConf.cpp wraptermios.cpp Daemon.cpp  -I/usr/local/include/   -pthread -std=c++11    -Wl,--no-as-needed  -o Trace
+#	$(CXX) -o $@ Main.o $(OBJS) $(CXXFLAGS) $(INCLUDES)  $(LDFLAGS) $(LDPATH)
 
 #Reader_test:Reader_test.o $(OBJS)
 #	$(CXX) -o $@ test/Reader_test.o $(OBJS) $(CXXFLAGS) $(INCLUDES)  $(LDFLAGS) $(LDPATH)

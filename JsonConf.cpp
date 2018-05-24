@@ -54,6 +54,11 @@ std::string JsonConf::getFilePrefix()
 	return string("xq");
 }
 
+int JsonConf::getUsageRate()
+{
+	return doc["configParam"]["usageRate"].GetInt();
+}
+
 int JsonConf::getFileSliceSize()
 {
 	return doc["configParam"]["filesize"].GetInt();
@@ -83,6 +88,7 @@ void JsonConf::print(std::ostream &out)
 	out << "getDiff() = " << getDiff() << '\n';
 	out << "getTimeout() = " << getTimeout() << '\n';
 	out << "getDaemonMode() = " << getDaemonMode() << '\n';
+	out << "getUsageRate() = " << getUsageRate() << '\n';
 }
 
 void JsonConf::initialize(int argc, char **argv)

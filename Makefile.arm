@@ -21,8 +21,9 @@ clean:
 	$(CXX) -o $@ -c $< $(CXXFLAGS) $(INCLUDES)  $(LDFLAGS) $(LDPATH) 
 
 Trace: Main.o $(OBJS)
-	$(CXX) -o $@ Main.o $(OBJS) $(CXXFLAGS) $(INCLUDES)  $(LDFLAGS) $(LDPATH)
-	arm-linux-g++ TraceMonitorApp.cpp Glue.cpp Reader.cpp Pack.cpp  Record.cpp  error.cpp JsonConf.cpp wraptermios.cpp Daemon.cpp  -I/usr/local/include/   -pthread -std=c++11    -Wl,--no-as-needed  -o Trace
+	$(CXX) TraceMonitorApp.cpp Glue.cpp Reader.cpp Pack.cpp  Record.cpp Getdiskinfo.cpp error.cpp JsonConf.cpp wraptermios.cpp Daemon.cpp  -I/usr/local/include/   -pthread -std=c++11    -Wl,--no-as-needed  -o Trace
+#	$(CXX) -o $@ Main.o $(OBJS) $(CXXFLAGS) $(INCLUDES)  $(LDFLAGS) $(LDPATH)
+
 #Reader_test:Reader_test.o $(OBJS)
 #	$(CXX) -o $@ Reader_test.o $(OBJS) $(CXXFLAGS) $(INCLUDES)  $(LDFLAGS) $(LDPATH)
 #

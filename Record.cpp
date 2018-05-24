@@ -4,20 +4,20 @@
 #include <time.h>
 #include <sys/stat.h>
 #include <dirent.h>
-#include <cstdio>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <cstdint>
+#include "Getdiskinfo.h"
 #include "JsonConf.h"
 #include "Record.h"
+
 using namespace std;
 
 static const string  dir_name = "/usr/local/trace/record/";
 static const string  pFormat =  "%Y%m%d%H%M%S";
 static const string  Format =   pFormat + "_";
 static const string  Parse =    "%*[^_]_%[^_]%*s";
-
 
 static string filename(const int diff = 0)
 {
@@ -134,7 +134,6 @@ Record::Record(const string pre_fix, const string sub_fix, const int port):pre_f
 	Open();
 }
 
-
 void Record::SIGHANDLE()
 {
 	string  outfile;
@@ -221,9 +220,7 @@ void Record::GetFileVec()
 	lstat( dir_name.c_str() , &s );
 	if( ! S_ISDIR( s.st_mode ) )
 	{
-		cout<<"dir_name is not a valid directory !"<<endl;
 		mkdir(dir_name.c_str(), S_IRWXU|S_IRGRP|S_IROTH);
-		cout<<"create " << dir_name << endl;
 	}
 	
 	struct dirent * filename;    // return value for readdir()
@@ -254,11 +251,11 @@ void Record::GetFileVec()
 
 void Record::DelOld()
 {
+#if 0
 	JsonConf &config = JsonConf::getInstance();
 	int  diff = config.getDiff();
 
 	string  file = filename(diff);
-
 	while(!FileList.empty())
 	{
 		if(!CComp(FileList.back(), "test_" + file))
@@ -271,4 +268,24 @@ void Record::DelOld()
 			break;
 		}
 	}
+#else	
+	JsonConf &config = JsonConf::getInstance();
+	int  conf_percent = config.getUsageRate();
+	int  percent = 0;
+	while(!FileList.empty())
+	{
+		percent = get_disk_percent(dir_name.c_str());
+		cout << "conf_percent = " << conf_percent << endl;
+		cout << "percent = " << percent << endl;
+		if(percent >= conf_percent)
+		{
+			Del(FileList.back());
+			FileList.pop_back();
+		}
+		else
+		{
+			break;
+		}
+	}
+#endif
 }
