@@ -3,22 +3,17 @@
 #include <stdlib.h>
 #include "wrapsock.h"
 #include "sock_ntop.h"
-
+#include "Udp_recv.h"
 using namespace std;
 
 const std::string UPDATE = "configUpdate";
 
-int main(int argc, char **argv)
+int Recv_msg(int serv_port)
 {
 	int	sockfd;
 	struct sockaddr_in servaddr, cliaddr;
 	const int    on = 1;
 	const int    MAXLINE = 4096;
-
-	if (argc != 2)
-		err_quit("usage: udpcli <port>");
-
-	short serv_port = atoi(argv[1]);
 
 	sockfd = Socket(AF_INET, SOCK_DGRAM, 0);
 
@@ -46,3 +41,10 @@ int main(int argc, char **argv)
 
 	exit(0);
 }
+//
+//int main(int argc, char**argv)
+//{
+//	Recv_msg(5555);
+//   
+//	return 0; 
+//}
