@@ -19,10 +19,12 @@ string get_warn_stat_head(const uint8_t mt, const int type, const string data)
 	uint8_t type_ = (type == WARING ? 0 : 1);
 
 	auto now = chrono::system_clock::now();
-	time_t time_sec = chrono::system_clock::to_time_t(now);
+	auto now_ms = chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch());
+
+	time_t time_sec = now_ms.count() / 1000;
 //	time_sec = ntohl(time_sec);
 
-	uint32_t    time_msec = 0;
+	uint32_t    time_msec = now_ms.count() % 1000;
 //	time_msec = ntohl(time_msec);
 
 	short  time_tz = 8;
@@ -70,10 +72,12 @@ string get_igsmr_pin_head(const uint8_t mt, const uint8_t mt_s, const int type, 
 	uint8_t type_ = (type == PIN ? 0 : 1);
 
 	auto now = chrono::system_clock::now();
-	time_t time_sec = chrono::system_clock::to_time_t(now);
+	auto now_ms = chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch());
+
+	time_t time_sec = now_ms.count() / 1000;
 //	time_sec = ntohl(time_sec);
 
-	int    time_msec = 0;
+	uint32_t    time_msec = now_ms.count() % 1000;
 //	time_msec = ntohl(time_msec);
 
 	short  time_tz = 8;

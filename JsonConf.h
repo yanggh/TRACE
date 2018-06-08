@@ -1,11 +1,11 @@
 #ifndef __JSONCONF__H_
 #define __JSONCONF__H_
+#include <string>
+#include <iostream>
 #include "rapidjson/document.h"
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
 #include "singleton.h"
-#include <string>
-#include <iostream>
 
 class JsonConf
 {
@@ -23,7 +23,6 @@ public:
     std::string getLogDir();
     std::string getSerial1();
     std::string getSerial2();
-    std::string getFilePrefix();
 
     int getUsageRate();
     int getFileSliceSize();

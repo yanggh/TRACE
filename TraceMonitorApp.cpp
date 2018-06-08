@@ -4,6 +4,14 @@
 #include "Record.h"
 #include "JsonConf.h"
 #include "Daemon.h"
+#include "Udp_recv.h"
+#include "Add_file_fix.h"
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/file.h>
 #include <signal.h>
 #include <thread>
 using namespace std;
@@ -16,7 +24,7 @@ static const string  pre_full_fix = "FullTrace_";
 static const string  pre_full_sub = ".trc";
 static const string  pre_txt_fix = "InfoText_";
 static const string  pre_txt_sub = ".trd";
-
+static const string  record_path = "/usr/local/trace/record/";
 
 namespace {
 volatile int g_sigint_flag = 0;
@@ -26,6 +34,8 @@ void sigint_process(int signo)
     g_sigint_flag = 1;
 }
 
+static int flag_1 = 0;
+static int flag_2 = 0;
 }   // namespace
 
 void  run(const int Port)
@@ -67,6 +77,7 @@ void  run(const int Port)
 		}
 
 		Data data = reader.get_data();
+		Port == 1 ? flag_1 = 1 : flag_2 = 1;	
 		string  dst = pack.impl(data);
 	
 		if(dst != "invalid")
@@ -75,45 +86,57 @@ void  run(const int Port)
 			if(data.type == UP_SM || data.type == DOWN_SM || data.type == PIN)
    		    	{
 				igsmr_record.Write(dst1);
-				time_t  tt = time(NULL);
-				struct tm  *tmTime = localtime(&tt);
-
-				char strTime[100];
-				strftime(strTime, sizeof(strTime), "[%Y%m%d%H%M%S]: ", tmTime);
-				dst += string(strTime);
-				text_record.Write(dst);	
 			}
 			else
 			{
 				information_record.Write(dst1);
-				time_t  tt = time(NULL);
-				struct tm  *tmTime = localtime(&tt);
-
-				char strTime[100];
-				strftime(strTime, sizeof(strTime), "[%Y%m%d%H%M%S]: ", tmTime);
-				dst += string(strTime);
-				text_record.Write(dst);	
 			}
+
+			time_t  tt = time(NULL);
+			struct tm  *tmTime = localtime(&tt);
+
+			char strTime[100];
+			strftime(strTime, sizeof(strTime), "[%Y%m%d%H%M%S]: ", tmTime);
+			dst += string(strTime);
+			text_record.Write(dst);	
 		}
 	}
 }
 
 int main(int argc, char **argv)
 {
-	JsonConf::initialize(argc, argv);
-	JsonConf &config = JsonConf::getInstance();
-	config.print(cout);
-	
-	int  daemon = config.getDaemonMode();
-	if(daemon == 1)
+	int lock_file = open("/tmp/single_proc.lock", O_CREAT|O_RDWR, 0666);
+	int rc = flock(lock_file, LOCK_EX|LOCK_NB);
+	if (rc)
 	{
-	    Daemon();
+		if (EWOULDBLOCK == errno)
+		{
+			printf("该实例已经运行!\nExit...");
+		}
+	}
+	else
+	{
+		JsonConf::initialize(argc, argv);
+		JsonConf &config = JsonConf::getInstance();
+		config.print(cout);
+
+		int  daemon = config.getDaemonMode();
+		if(daemon == 1)
+		{
+			Daemon();
+		}
+
+		add_file_fix(record_path);
+		std::thread  thr1(run, 1);
+		std::thread  thr2(run, 2);
+		std::thread  thr3(Recv_msg, 5555);
+
+		thr1.join();
+		thr2.join();
+		thr3.join();
+
+		close(lock_file);
 	}
 
-	std::thread  thr1(run, 1);
-	std::thread  thr2(run, 2);
-
-	thr1.join();
-	thr2.join();
 	return 0;
 }

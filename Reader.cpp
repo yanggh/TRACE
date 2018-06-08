@@ -71,10 +71,6 @@ Data Reader::get_data()
 	{
 		data.assign(buff, len);
 	}
-	else
-	{
-		cout << "error " << endl;
-	}
 
 	return move(d);
 }

@@ -12,6 +12,9 @@ private:
 
 	string   pre_fix;
 	string   sub_fix;
+
+	int	 pos_;
+	time_t   sign_;
 	int      Port; 
 	ofstream infile;
 	std::vector<std::string>  FileList;

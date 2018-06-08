@@ -10,7 +10,6 @@ class  Reader
 {
 private:
 	int fd;
-	int num;
 public:
 	Reader(const std::string dev);
 	~Reader();

@@ -22,12 +22,12 @@ enum VOL_TYPE
 {
     VOL_H = 1,
     VOL_L = 0,
-    CTS_H = 0,
-    CTS_L = 1,
-    DSR_H = 0x18,
-    DSR_L = 0x19,
-    DCD_H = 0x08,
-    DCD_L = 0x09
+    CTS_H = 1,
+    CTS_L = 0,
+    DSR_H = 0x19,
+    DSR_L = 0x18,
+    DCD_H = 0x09,
+    DCD_L = 0x08
 };
 
 

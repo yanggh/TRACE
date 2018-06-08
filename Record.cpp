@@ -17,7 +17,8 @@ using namespace std;
 static const string  dir_name = "/usr/local/trace/record/";
 static const string  pFormat =  "%Y%m%d%H%M%S";
 static const string  Format =   pFormat + "_";
-static const string  Parse =    "%*[^_]_%[^_]%*s";
+//static const string  Parse =    "%*[^_]_%[^_]%*s";
+static const string  Parse =    "%*[^_]_%*[^_]_%[^._]%*s";
 
 static string filename(const int diff = 0)
 {
@@ -32,15 +33,16 @@ static string filename(const int diff = 0)
 	return file;
 }
 
-static string Add_Over_Time(const string &filename, const int Port, const string &suf_fix)
+static string Add_Over_Time(const string &filename, const string &sub_fix)
 {
 	time_t  tt = time(NULL);
 	struct tm  *tmTime = localtime(&tt);
 
 	char strTime[100];
-	strftime(strTime, sizeof(strTime), Format.c_str(), tmTime);
+	strftime(strTime, sizeof(strTime), pFormat.c_str(), tmTime);
 
-	string file = filename + string(strTime) + to_string(Port) + suf_fix;
+	//string file = filename + string(strTime) + to_string(Port) + sub_fix;
+	string file = filename + string(strTime) + sub_fix;
 
 	return file;
 }
@@ -91,7 +93,7 @@ static bool CComp(const string &file1,  const string &file2)
 
 void  Record::Open()
 {
-	newfile = pre_fix + filename();
+	newfile = pre_fix + to_string(Port) + "_" + filename();
 	
 	string path  = Get_all_path(newfile);
 	infile.open(path.c_str());
@@ -99,6 +101,8 @@ void  Record::Open()
 	{
 		exit(EXIT_FAILURE);
 	}
+	pos_ = 0;
+	sign_ = time(NULL);
 }
 
 void Record::Sort()
@@ -145,7 +149,7 @@ void Record::SIGHANDLE()
 		infile.close();
 	}
 
-	outfile = Add_Over_Time(newfile, Port, sub_fix);
+	outfile = Add_Over_Time(newfile, sub_fix);
 	src_path = Get_all_path(newfile);
 	dst_path = Get_all_path(outfile);
 	rename(src_path.c_str(), dst_path.c_str());
@@ -163,22 +167,19 @@ void Record::Show()
 
 void  Record::Write(const std::string  &val)
 {
-	static  int  pos = 0;
-	static  time_t  sign = time(NULL);
-
 	JsonConf &config = JsonConf::getInstance();
 	int  limit = config.getFileSliceSize();
 	int  timeout = config.getTimeout();
 
-	if (limit <= pos)
+	if (limit <= pos_)
 	{
-		cout << "limit = " << limit << ", pos = " << pos << endl;
+		cout << "limit = " << limit << ", pos_ = " << pos_ << endl;
 		string  outfile;
 		string  src_path;
 		string  dst_path;
 
 		infile.close();
-		outfile = Add_Over_Time(newfile, Port, sub_fix);
+		outfile = Add_Over_Time(newfile, sub_fix);
 		src_path = Get_all_path(newfile);
 		dst_path = Get_all_path(outfile);
 
@@ -187,9 +188,8 @@ void  Record::Write(const std::string  &val)
 
 		rename(src_path.c_str(), dst_path.c_str());
 		Open();
-		pos = 0;
 	}
-	else  if((timeout > 0) && timeout <= (time(NULL) - sign))
+	else  if((timeout > 0) && timeout <= (time(NULL) - sign_))
 	{
 		cout << "timeout = " << timeout << endl;
 		string  outfile;
@@ -197,7 +197,7 @@ void  Record::Write(const std::string  &val)
 		string  dst_path;
 
 		infile.close();
-		outfile = Add_Over_Time(newfile, Port, sub_fix);
+		outfile = Add_Over_Time(newfile, sub_fix);
 		src_path = Get_all_path(newfile);
 		dst_path = Get_all_path(outfile);
 
@@ -206,11 +206,9 @@ void  Record::Write(const std::string  &val)
 
 		rename(src_path.c_str(), dst_path.c_str());
 		Open();
-		pos = 0;
-		sign = time(NULL);
 	}
 	 
-	pos += val.size();
+	pos_ += val.size();
 	infile << val << flush;	
 }
 
@@ -232,7 +230,7 @@ void Record::GetFileVec()
 		return;
 	}
 	
-	string  spli = string("_")+to_string(Port)+string(".");
+	string  spli = string("_")+to_string(Port)+string("_");
 	while( ( filename = readdir(dir) ) != NULL )
 	{
 		if( strcmp( filename->d_name , "." ) == 0 || 
@@ -251,14 +249,14 @@ void Record::GetFileVec()
 
 void Record::DelOld()
 {
-#if 0
+#if 1
 	JsonConf &config = JsonConf::getInstance();
 	int  diff = config.getDiff();
 
 	string  file = filename(diff);
 	while(!FileList.empty())
 	{
-		if(!CComp(FileList.back(), "test_" + file))
+		if(!CComp(FileList.back(), "test_1_" + file))
 		{
 			Del(FileList.back());
 			FileList.pop_back();

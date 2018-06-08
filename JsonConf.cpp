@@ -1,8 +1,7 @@
-#include "JsonConf.h"
-#include <cstdio>
 #include <fstream>
 #include <string>
 #include <iostream>
+#include "JsonConf.h"
 
 using namespace std;
 
@@ -47,11 +46,6 @@ std::string JsonConf::getSerial1()
 std::string JsonConf::getSerial2()
 {
 	return doc["configParam"]["serial2"].GetString();
-}
-
-std::string JsonConf::getFilePrefix()
-{
-	return string("xq");
 }
 
 int JsonConf::getUsageRate()
