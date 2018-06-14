@@ -40,12 +40,6 @@ static int flag_2 = 0;
 
 void  run(const int Port)
 {
-	struct sigaction    action;
-	action.sa_flags = 0;
-	action.sa_handler = sigint_process;
-
-	sigaction(SIGINT, &action, NULL);
-
 	std::string dev;
 	JsonConf &config = JsonConf::getInstance();
 	if(Port == 1)
@@ -67,14 +61,14 @@ void  run(const int Port)
 	Pack   pack;
     	while (1)
 	{
-		if(g_sigint_flag)
-		{
-			igsmr_record.SIGHANDLE();
-			information_record.SIGHANDLE();   
-			full_record.SIGHANDLE(); 
-			text_record.SIGHANDLE();
-			return;
-		}
+//		if(g_sigint_flag)
+//		{
+//			igsmr_record.SIGHANDLE();
+//			information_record.SIGHANDLE();   
+//			full_record.SIGHANDLE(); 
+//			text_record.SIGHANDLE();
+//			return;
+//		}
 
 		Data data = reader.get_data();
 		Port == 1 ? flag_1 = 1 : flag_2 = 1;	
@@ -105,38 +99,24 @@ void  run(const int Port)
 
 int main(int argc, char **argv)
 {
-	int lock_file = open("/tmp/single_proc.lock", O_CREAT|O_RDWR, 0666);
-	int rc = flock(lock_file, LOCK_EX|LOCK_NB);
-	if (rc)
+	JsonConf::initialize(argc, argv);
+	JsonConf &config = JsonConf::getInstance();
+	config.print(cout);
+
+	int  daemon = config.getDaemonMode();
+	if(daemon == 1)
 	{
-		if (EWOULDBLOCK == errno)
-		{
-			printf("该实例已经运行!\nExit...");
-		}
+		Daemon();
 	}
-	else
-	{
-		JsonConf::initialize(argc, argv);
-		JsonConf &config = JsonConf::getInstance();
-		config.print(cout);
 
-		int  daemon = config.getDaemonMode();
-		if(daemon == 1)
-		{
-			Daemon();
-		}
+	add_file_fix(record_path);
+	std::thread  thr1(run, 1);
+	std::thread  thr2(run, 2);
+	std::thread  thr3(Recv_msg, 5555);
 
-		add_file_fix(record_path);
-		std::thread  thr1(run, 1);
-		std::thread  thr2(run, 2);
-		std::thread  thr3(Recv_msg, 5555);
-
-		thr1.join();
-		thr2.join();
-		thr3.join();
-
-		close(lock_file);
-	}
+	thr1.join();
+	thr2.join();
+	thr3.join();
 
 	return 0;
 }
