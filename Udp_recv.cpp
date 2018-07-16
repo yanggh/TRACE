@@ -1,12 +1,47 @@
 #include <iostream>
 #include <string>
 #include <stdlib.h>
+#include <unistd.h>
 #include "wrapsock.h"
 #include "sock_ntop.h"
 #include "Udp_recv.h"
 using namespace std;
 
-const std::string UPDATE = "configUpdate";
+int flag_1 = 0;
+int flag_2 = 0;
+
+const std::string UPDATE{"configUpdate"};
+#define  UDP_SERVER_IP  "192.168.1.88"
+
+int Send_msg(int serv_port)
+{
+	printf("Send_msg\n");
+	int sockfd, len = 0;
+	struct sockaddr_in addr;
+	int  addr_len = sizeof(struct sockaddr_in);
+	char buffer[256];
+
+	if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+		exit(0);
+	}
+
+	bzero(&addr, sizeof(addr));
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(serv_port);
+	addr.sin_addr.s_addr = inet_addr(UDP_SERVER_IP);
+
+	while(1)
+	{
+		memset(buffer, 0, sizeof(buffer));
+		len = sprintf(buffer, "%d:%d", flag_1, flag_2);
+		sendto(sockfd, buffer, len, 0, (struct sockaddr *)&addr, addr_len);
+		printf("buffer = %s\n", buffer);
+		flag_1 = 0;
+		flag_2 = 0;
+		sleep(5);
+	}
+
+}
 
 int Recv_msg(int serv_port)
 {
@@ -42,6 +77,7 @@ int Recv_msg(int serv_port)
 			system(mesg);
 			cout << string(mesg, n) << endl;	
 			Sendto(sockfd, "ok!", strlen("ok!"), 0, (struct sockaddr*)&cliaddr, len);
+
 		}
 	}
 

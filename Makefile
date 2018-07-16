@@ -20,7 +20,7 @@ clean:
 %.o:%.cpp
 	$(CXX) -o $@ -c $< $(CXXFLAGS) $(INCLUDES)  $(LDFLAGS) $(LDPATH) 
 
-Trace: Main.o $(OBJS)
+Trace: $(OBJS)
 	$(CXX) TraceMonitorApp.cpp Add_file_fix.cpp Glue.cpp Reader.cpp Pack.cpp  Record.cpp Getdiskinfo.cpp error.cpp JsonConf.cpp wraptermios.cpp Udp_recv.cpp  sock_ntop.cpp wrapsock.cpp  Daemon.cpp  -I/usr/local/include/   -pthread -std=c++11    -Wl,--no-as-needed  -o Trace
 #	$(CXX) TraceMonitorApp.cpp Glue.cpp Reader.cpp Pack.cpp  Record.cpp Getdiskinfo.cpp error.cpp JsonConf.cpp wraptermios.cpp Daemon.cpp  -I/usr/local/include/   -pthread -std=c++11    -Wl,--no-as-needed  -o Trace
 #	$(CXX) -o $@ Main.o $(OBJS) $(CXXFLAGS) $(INCLUDES)  $(LDFLAGS) $(LDPATH)

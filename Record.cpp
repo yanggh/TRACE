@@ -266,7 +266,7 @@ void Record::DelOld()
 			break;
 		}
 	}
-#else	
+//#else	
 	JsonConf &config = JsonConf::getInstance();
 	int  conf_percent = config.getUsageRate();
 	int  percent = 0;

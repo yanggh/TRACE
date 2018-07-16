@@ -65,57 +65,12 @@ std::string Pack::pop_stack(const Data &data)
 				{
 					output = dst.substr(pos1, pos2+1);
 					msg_stack.top().data.erase(0, pos2+1);
-//					printf("baaabefore:");
-//					for(int i = 0; i < dst.size(); i++)
-//					{
-//						printf("%02x ", dst[i]);
-//					}
-//					printf("%d  %d\n", pos1, pos2);
-//
-//					output = dst.substr(pos1, pos2+1);
-//					printf("bbbaaaamid:");
-//					for(int i = 0; i < output.size(); i++)
-//					{
-//						printf("%02x ", output[i]);
-//					}
-//					printf("%d  %d\n", pos1, pos2);
-//
-//					string dst1 = msg_stack.top().data.erase(0, pos2+1);
-//					dst1 = msg_stack.top().data.erase(0, pos2+1);
-//					printf("aaaaafter1:");
-//					for(int i = 0; i < dst1.size(); i++)
-//					{
-//						printf("%02x ", dst1[i]);
-//					}
-//					printf("%d  %d\n", pos1, pos2);
 				}
 			}
 			else
 			{
 				output = dst.substr(pos1, pos2+1);
 				msg_stack.top().data.erase(0, pos2+1);
-//
-//				printf("aaaabefore:");
-//				for(int i = 0; i < dst.size(); i++)
-//				{
-//					printf("%02x ", dst[i]);
-//				}
-//				printf("%d  %d\n", pos1, pos2);
-//
-//				printf("aaaaaaamid:");
-//				for(int i = 0; i < output.size(); i++)
-//				{
-//					printf("%02x ", output[i]);
-//				}
-//				printf("%d  %d\n", pos1, pos2);
-//
-//				string dst1 = msg_stack.top().data.erase(0, pos2+1);
-//				printf("aaaaafter1:");
-//				for(int i = 0; i < dst1.size(); i++)
-//				{
-//					printf("%02x ", dst1[i]);
-//				}
-//				printf("%d  %d\n", pos1, pos2);
 			}
 		}
 	    }
