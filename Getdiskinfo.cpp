@@ -18,9 +18,9 @@ int get_disk_percent(const char* disk)
 	    fprintf(stderr, "Failed to get file disk infomation,errno:%u", errno);
 	    return -1;
     }
-    long total_size = disk_info.f_blocks * disk_info.f_bsize;
-    long available_size = disk_info.f_bavail * disk_info.f_bsize;
-    long free_size = disk_info.f_bfree * disk_info.f_bsize;
+    long total_size = disk_info.f_blocks;
+    long free_size = disk_info.f_bfree;
+    long available_size = disk_info.f_bavail;
 
     int percent = (total_size - free_size) * 100/ (total_size - free_size + available_size) + 1;
 

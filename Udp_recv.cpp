@@ -11,7 +11,7 @@ int flag_1 = 0;
 int flag_2 = 0;
 
 const std::string UPDATE{"configUpdate"};
-#define  UDP_SERVER_IP  "192.168.1.88"
+#define  UDP_SERVER_IP  "127.0.0.1"
 
 int Send_msg(int serv_port)
 {
@@ -35,7 +35,6 @@ int Send_msg(int serv_port)
 		memset(buffer, 0, sizeof(buffer));
 		len = sprintf(buffer, "%d:%d", flag_1, flag_2);
 		sendto(sockfd, buffer, len, 0, (struct sockaddr *)&addr, addr_len);
-		printf("buffer = %s\n", buffer);
 		flag_1 = 0;
 		flag_2 = 0;
 		sleep(5);
@@ -70,7 +69,6 @@ int Recv_msg(int serv_port)
 		if(UPDATE == std::string(mesg, n))
 		{
 			cout << "UPDATE" << endl;
-			Sendto(sockfd, "ok!", strlen("ok!"), 0, (struct sockaddr*)&cliaddr, len);
 		}
 		else
 		{

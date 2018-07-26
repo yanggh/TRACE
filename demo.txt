@@ -1,2 +1,0 @@
-{"carriorName":"日本电信","deviceName":"iPhone5,2","osName":"android","osVersion":"8.1","appId":"com.mmcshadow.doudizhu","versionName":"1.0","versionCode":"1.0","deviceId":"11111111"}
-{"sysMsg":{"dataProcessSysVersion":"","displaySysUpgradeTime":"","displaySysVersion":"","dataProcessSysUpgradeTime":""},"configParam":{"deviceNum":"zhegekeyima","divideValue":15,"signForATP":"atp标识","signForMT":"Mt标识biao市shi是","usageRate":91,"divideModel":"divideBySize"}

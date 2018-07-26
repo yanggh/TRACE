@@ -23,7 +23,7 @@ static const string  Parse =    "%*[^_]_%*[^_]_%[^._]%*s";
 static string filename(const int diff = 0)
 {
 	time_t  tt = time(NULL);
-	tt -= diff * 60;
+	tt -= diff;
 	struct tm  *tmTime = localtime(&tt);
 
 	char strTime[100];
@@ -137,7 +137,7 @@ Record::Record(const string pre_fix, const string sub_fix, const int port):pre_f
 	Sort();
 	Open();
 }
-
+#if 0
 void Record::SIGHANDLE()
 {
 	string  outfile;
@@ -154,7 +154,7 @@ void Record::SIGHANDLE()
 	dst_path = Get_all_path(outfile);
 	rename(src_path.c_str(), dst_path.c_str());
 }
-
+#endif
 void Record::Show()
 {
 	std::vector<std::string>::iterator iter;
@@ -244,6 +244,7 @@ void Record::GetFileVec()
 			continue;
 
 		FileList.push_back(filename->d_name);
+		cout << "dddddddd = " << filename->d_name << ", size = " << FileList.size() << endl;
 	}
 } 
 
@@ -266,13 +267,14 @@ void Record::DelOld()
 			break;
 		}
 	}
-//#else	
-	JsonConf &config = JsonConf::getInstance();
+
+//	JsonConf &config = JsonConf::getInstance();
 	int  conf_percent = config.getUsageRate();
 	int  percent = 0;
 	while(!FileList.empty())
 	{
-		percent = get_disk_percent(dir_name.c_str());
+		percent = get_disk_percent("/");
+//		percent = get_disk_percent(dir_name.c_str());
 		cout << "conf_percent = " << conf_percent << endl;
 		cout << "percent = " << percent << endl;
 		if(percent >= conf_percent)
