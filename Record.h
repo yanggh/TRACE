@@ -9,27 +9,28 @@ using namespace std;
 class  Record
 {
 private:
-	string   newfile;
+    string   newfile;
 
-	string   pre_fix;
-	string   sub_fix;
+    string   pre_fix;
+    string   sub_fix;
 
-	int	 pos_;
-	time_t   sign_;
-	int      Port; 
-	ofstream infile;
-	vector<string>  FileList;
+    int  pos_;
+    time_t   sign_;
+    int      Port;
+    int      Port;
+    ofstream infile;
+    vector<string>  FileList;
 
-	void Open();
-	void GetFileVec();
-	void Sort();
-	void DelOld();
-	void AddNewFile(const string &filename);
+    void Open();
+    void GetFileVec();
+    void Sort();
+    void DelOld();
+    void AddNewFile(const string &filename);
 public:
-	Record(const string pre_fix, const string sub_fix, const int port);
-	~Record(){}
-	void Show();
-	void Write(const std::string  &val);
+    Record(const string pre_fix, const string sub_fix, const int port);
+    ~Record(){}
+    void Show();
+    void Write(const std::string  &val);
 };
 
 #endif

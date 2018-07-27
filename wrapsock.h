@@ -14,7 +14,8 @@
 /* Define to 1 if you have the `poll' function. */
 #define HAVE_POLL 1
 
-#ifdef HAVE_POLL 
+#ifdef HAVE_POLL
+#ifdef HAVE_POLL
 #include <poll.h>
 #endif
 

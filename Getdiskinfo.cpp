@@ -15,8 +15,8 @@ int get_disk_percent(const char* disk)
 
     if ((ret = statfs(disk, &disk_info)) == -1)
     {
-	    fprintf(stderr, "Failed to get file disk infomation,errno:%u", errno);
-	    return -1;
+        fprintf(stderr, "Failed to get file disk infomation,errno:%u", errno);
+        return -1;
     }
     long total_size = disk_info.f_blocks;
     long free_size = disk_info.f_bfree;
