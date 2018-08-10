@@ -1,13 +1,6 @@
-#include <iostream>
-#include <cstring>
-#include <vector>
-#include <time.h>
 #include <sys/stat.h>
 #include <dirent.h>
-#include <unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <cstdint>
+#include <algorithm>
 #include "Getdiskinfo.h"
 #include "JsonConf.h"
 #include "Record.h"
@@ -17,8 +10,10 @@ using namespace std;
 static const string  dir_name = "/usr/local/trace/record/";
 static const string  pFormat =  "%Y%m%d%H%M%S";
 static const string  Format =   pFormat + "_";
-//static const string  Parse =    "%*[^_]_%[^_]%*s";
 static const string  Parse =    "%*[^_]_%*[^_]_%[^._]%*s";
+
+vector<string>  Record::flist;
+mutex           Record::mtx;
 
 static string filename(const int diff = 0)
 {
@@ -58,7 +53,7 @@ static string Get_all_path(const string filename)
     return filepath;
 }
 
-static void Del(const std::string &filename)
+static void Del(const string &filename)
 {
     string filepath = Get_all_path(filename);
 
@@ -88,7 +83,7 @@ static bool CComp(const string &file1,  const string &file2)
     strptime(start2, pFormat.c_str(), &tm_f);
     tt_2 = mktime(&tm_f);
 
-    return tt_1 > tt_2;
+    return (tt_1 > tt_2);
 }
 
 void  Record::Open()
@@ -105,67 +100,27 @@ void  Record::Open()
     sign_ = time(NULL);
 }
 
-void Record::Sort()
+void Record::AddNewFile(const string &filename)
 {
-        std::sort(FileList.begin(), FileList.end(), &CComp);
-//      std::sort(FileList.begin(), FileList.end(),
-//          [&] (const std::string &a, const std::string &b) -> bool
-//          { return this->CComp(a, b); });
-    //  struct MyComp {
-    //      Record *p;
-    //      bool (Record::*ptr)(const std::string &file1,  const std::string &file2);
-    //      bool operator () (const std::string &file1,  const std::string &file2)
-    //      {
-    //          return (p->*ptr)(file1, file2);
-    //      }
-    //  };
-    //  MyComp comp;
-    //  comp.p = this;
-    //  comp.ptr = &Record::CComp;
-    //  std::sort(FileList.begin(), FileList.end(), comp);
-//      std::sort(FileList.begin(), FileList.end(), std::bind(&Record::CComp, this, std::placeholders::_1, std::placeholders::_2));
-}
-
-void Record::AddNewFile(const std::string &filename)
-{
-    FileList.insert(FileList.begin(), filename);
+    mtx.lock();
+//  flist.push_back(filename);
+    flist.insert(flist.begin(), filename);
+    mtx.unlock();
 }
 
 Record::Record(const string pre_fix, const string sub_fix, const int port):pre_fix(pre_fix), sub_fix(sub_fix), Port(port)
 {
-    GetFileVec();
-    Sort();
     Open();
 }
-#if 0
-void Record::SIGHANDLE()
-{
-    string  outfile;
-    string  src_path;
-    string  dst_path;
 
-    if(infile.is_open())
-    {
-        infile.close();
-    }
-
-    outfile = Add_Over_Time(newfile, sub_fix);
-    src_path = Get_all_path(newfile);
-    dst_path = Get_all_path(outfile);
-    rename(src_path.c_str(), dst_path.c_str());
-}
-#endif
 void Record::Show()
 {
-    std::vector<std::string>::iterator iter;
-
-    for(iter = FileList.begin(); iter != FileList.end(); iter++)
-    {
-        cout << *iter << endl;
-    }
+    for(auto& it : flist)
+        cout << it << endl;
+    cout << "-------------------\n";
 }
 
-void  Record::Write(const std::string  &val)
+void  Record::Write(const string  &val)
 {
     JsonConf &config = JsonConf::getInstance();
     int  limit = config.getFileSliceSize();
@@ -212,7 +167,7 @@ void  Record::Write(const std::string  &val)
     infile << val << flush;
 }
 
-void Record::GetFileVec()
+void Record::Getlist()
 {
     struct stat s;
     lstat( dir_name.c_str() , &s );
@@ -230,37 +185,45 @@ void Record::GetFileVec()
         return;
     }
 
-    string  spli = string("_")+to_string(Port)+string("_");
     while( ( filename = readdir(dir) ) != NULL )
     {
-        if( strcmp( filename->d_name , "." ) == 0 ||
-            strcmp( filename->d_name , "..") == 0    )
+        if( strcmp(filename->d_name , "." ) == 0 ||
+                strcmp( filename->d_name , "..") == 0)
             continue;
 
-        if(strstr(filename->d_name, pre_fix.c_str()) == NULL)
+        if(strstr(filename->d_name, ".tr") == NULL )
             continue;
+        flist.insert(flist.begin(), filename->d_name);
+    }
 
-        if(strstr(filename->d_name, spli.c_str()) == NULL)
-            continue;
-
-        FileList.push_back(filename->d_name);
-        cout << "dddddddd = " << filename->d_name << ", size = " << FileList.size() << endl;
+//    flist.sort(CComp);
+    if(flist.size() > 0)
+    {
+        std::sort(flist.begin(), flist.end(), &CComp);
+        cout << "front ===== " << flist.front() << endl;
+        cout << "back ===== " << flist.back() << endl;
     }
 }
 
 void Record::DelOld()
 {
-#if 1
+    mtx.lock();
     JsonConf &config = JsonConf::getInstance();
     int  diff = config.getDiff();
 
     string  file = filename(diff);
-    while(!FileList.empty())
+    while(!flist.empty())
     {
-        if(!CComp(FileList.back(), "test_1_" + file))
+    cout << "file == " << file << ", list = " << flist.size() << endl;
+    cout << "flist.front = "  << flist.front() << endl;
+    cout << "flist.back = "  << flist.back() << endl;
+        if(!CComp(flist.back(), "test_1_" + file))
         {
-            Del(FileList.back());
-            FileList.pop_back();
+            cout << "timeout " << endl;
+            cout << "file = " << file << endl;
+
+            Del(flist.back());
+            flist.pop_back();
         }
         else
         {
@@ -268,24 +231,23 @@ void Record::DelOld()
         }
     }
 
-//  JsonConf &config = JsonConf::getInstance();
     int  conf_percent = config.getUsageRate();
     int  percent = 0;
-    while(!FileList.empty())
+    while(!flist.empty())
     {
         percent = get_disk_percent("/");
-//      percent = get_disk_percent(dir_name.c_str());
-        cout << "conf_percent = " << conf_percent << endl;
-        cout << "percent = " << percent << endl;
         if(percent >= conf_percent)
         {
-            Del(FileList.back());
-            FileList.pop_back();
+            cout << "conf_percent = " << conf_percent << endl;
+            cout << "percent = " << percent << endl;
+
+            Del(flist.back());
+            flist.pop_back();
         }
         else
         {
             break;
         }
     }
-#endif
+    mtx.unlock();
 }

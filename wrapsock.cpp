@@ -308,7 +308,6 @@ Socketpair(int family, int type, int protocol, int *fd)
 
 #ifdef HAVE_EPOLL
 int
-int
 Epoll_create(int size)
 {
     int     n;
@@ -318,7 +317,6 @@ Epoll_create(int size)
     return(n);
 }
 
-int
 int
 Epoll_create1(int flags)
 {
@@ -330,7 +328,6 @@ Epoll_create1(int flags)
 }
 
 int
-int
 Epoll_ctl(int epfd, int op, int fd, struct epoll_event *ev)
 {
     int     n;
@@ -340,7 +337,6 @@ Epoll_ctl(int epfd, int op, int fd, struct epoll_event *ev)
     return(n);
 }
 
-int
 int
 Epoll_wait(int epfd, struct epoll_event *evlist, int maxevents, int timeout)
 {

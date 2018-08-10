@@ -15,7 +15,6 @@
 #define HAVE_POLL 1
 
 #ifdef HAVE_POLL
-#ifdef HAVE_POLL
 #include <poll.h>
 #endif
 
@@ -27,7 +26,7 @@
 #endif
 
 			/* prototypes for our socket wrapper functions: see {Sec errors} */
-int		 Accept(int, SA *, socklen_t *);
+int      Accept(int, SA *, socklen_t *);
 void	 Bind(int, const SA *, socklen_t);
 void	 Connect(int, const SA *, socklen_t);
 void	 Getpeername(int, SA *, socklen_t *);

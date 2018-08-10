@@ -8,9 +8,6 @@ using namespace std;
 
 int JsonConf::init()
 {
-    using std::string;
-    using std::ifstream;
-
     // read json content into string.
     string      stringFromStream;
     ifstream    in;
@@ -33,17 +30,17 @@ int JsonConf::init()
     return 0;
 }
 
-std::string JsonConf::getLogDir()
+string JsonConf::getLogDir()
 {
     return doc["configParam"]["logdir"].GetString();
 }
 
-std::string JsonConf::getSerial1()
+string JsonConf::getSerial1()
 {
     return doc["configParam"]["serial1"].GetString();
 }
 
-std::string JsonConf::getSerial2()
+string JsonConf::getSerial2()
 {
     return doc["configParam"]["serial2"].GetString();
 }
@@ -73,7 +70,7 @@ int JsonConf::getDaemonMode()
     return doc["configParam"]["daemon"].GetInt();
 }
 
-void JsonConf::print(std::ostream &out)
+void JsonConf::print(ostream &out)
 {
     out << "getLogDir() = " << getLogDir() << '\n';
     out << "getSerial1() = " << getSerial1() << '\n';
